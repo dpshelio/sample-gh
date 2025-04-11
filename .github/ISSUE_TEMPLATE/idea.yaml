@@ -12,7 +12,8 @@ body:
   - id: project
     type: dropdown
     attributes:
-      label: Name of your favourite [vegetable family](https://lmgtfy.com/?vegetables) that this vegetable is a part of
+      label: Vegetable family
+      description: Name of your favourite [vegetable family](https://lmgtfy.com/?vegetables) that this vegetable is a part of
       options:
         - berry
         - tuberous root
