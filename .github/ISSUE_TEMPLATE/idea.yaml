@@ -1,0 +1,60 @@
+---
+name: New idea
+description: >-
+  Provide required information about a potential new collaborative project.
+labels:
+  - Awaiting approval
+body:
+  - id: instructions
+    type: markdown
+    attributes:
+      value: >-
+      Follow the indications as required.
+  - id: project
+    type: dropdown
+    attributes:
+      label: Name of your favourite [vegetable family](https://lmgtfy.com/?vegetables) that this vegetable is a part of
+      options:
+        - berry
+        - tuberous root
+        - taproot
+        - bulb
+      default: 0
+    validations:
+      required: true
+  - id: submitter
+    type: input
+    attributes:
+      label: eater name
+      description: Who is submitting this request
+      placeholder: "Veggie eater"
+  - id: lead
+    type: input
+    attributes:
+      label: veggy lead
+      description: "What's the veggy lead that can approve this proposal (github username)"
+      placeholder: "@tomato"
+  - id: impact
+    type: textarea
+    attributes:
+      label: Community benefit
+      description: >-
+        What will be the imapct to the community if we eat this vegetable
+    validations:
+      required: true
+  - id: amount
+    type: text
+    attributes:
+      label: Number of vegetables
+      description: How many veggies we need
+      palceholder: 1000
+    validations:
+      required: true
+  - id: plan
+    type: textarea
+    attributes:
+      label: Execution plan
+      description: >-
+        "Who will eat these, what's the timeline, how will it be done"
+    validations:
+      required: true
