@@ -42,7 +42,7 @@ body:
     validations:
       required: true
   - id: amount
-    type: textarea
+    type: input
     attributes:
       label: Number of vegetables
       description: How many veggies we need
