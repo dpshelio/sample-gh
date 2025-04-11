@@ -46,7 +46,7 @@ body:
     attributes:
       label: Number of vegetables
       description: How many veggies we need
-      palceholder: 1000
+      placeholder: 1000
     validations:
       required: true
   - id: plan
