@@ -8,7 +8,7 @@ body:
   - id: instructions
     type: markdown
     attributes:
-      value: >-
+      value: |
       Follow the indications as required.
       > [!important]
       > This is good.
