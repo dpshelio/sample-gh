@@ -9,9 +9,9 @@ body:
     type: markdown
     attributes:
       value: |+
-      Follow the indications as required.
-      > [!important]
-      > This is good.
+        Follow the indications as required.
+        > [!important]
+        > This is good.
       
   - id: project
     type: dropdown
