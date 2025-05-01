@@ -8,7 +8,10 @@ body:
   - id: instructions
     type: markdown
     attributes:
-      value: Follow the indications as required.
+      value: >|
+      Follow the indications as required.
+      > [!Important]
+      > This is only for tasty foods.
   - id: project
     type: dropdown
     attributes:
