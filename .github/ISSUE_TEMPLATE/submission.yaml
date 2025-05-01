@@ -9,12 +9,12 @@ body:
     type: markdown
     attributes:
       value: |+
-      Follow the indications as required to submit a Small Development Grant submission.  
-      Notice that a project lead has to approve the submission.
-      > [!CAUTION]
-      > This is a form for only [sponsored](https://numfocus.org/sponsored-projects) and [affiliated](https://numfocus.org/sponsored-projects/affiliated-projects) NumFOCUS projects 
-      > Discuss the proposal with the project leads before submitting this issue.
-      > Each project has a limit of one proposal per round.
+        Follow the indications as required to submit a Small Development Grant submission.  
+        Notice that a project lead has to approve the submission.
+        > [!CAUTION]
+        > This is a form for only [sponsored](https://numfocus.org/sponsored-projects) and [affiliated](https://numfocus.org/sponsored-projects/affiliated-projects) NumFOCUS projects 
+        > Discuss the proposal with the project leads before submitting this issue.
+        > Each project has a limit of one proposal per round.
   - id: project
     type: input
     attributes:
