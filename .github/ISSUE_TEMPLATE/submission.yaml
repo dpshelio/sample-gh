@@ -28,6 +28,8 @@ body:
       label: submitter
       description: Who is submitting this request
       placeholder: "First name & Last name"
+    validations:
+      required: true
   - id: lead
     type: input
     attributes:
