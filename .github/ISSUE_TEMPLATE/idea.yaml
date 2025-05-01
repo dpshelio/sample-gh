@@ -8,9 +8,10 @@ body:
   - id: instructions
     type: markdown
     attributes:
-      value: >|
+      value: >-
       Follow the indications as required.
-      This is good.
+      > [!important]
+      > This is good.
   - id: project
     type: dropdown
     attributes:
