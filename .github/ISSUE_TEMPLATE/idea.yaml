@@ -10,8 +10,7 @@ body:
     attributes:
       value: >|
       Follow the indications as required.
-      > [!Important]
-      > This is only for tasty foods.
+      This is good.
   - id: project
     type: dropdown
     attributes:
