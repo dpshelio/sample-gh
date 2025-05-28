@@ -3,6 +3,7 @@ import os
 import shlex
 import subprocess
 from datetime import date
+import json
 
 from sdg_utils import get_all_issues, parse_issue
 
