@@ -62,6 +62,11 @@ def parse_issue(issue):
         "project_name": project_name
     }
 
+def combine_projects_rounds(issues_round, issues_prev):
+    for sdg in issues_round:
+        for sdg_prev in issues_prev:
+            if sdg['project_name'] == sdg_prev['project_name']:
+                sdg['funded_amount'] += sdg_prev['funded_amount']
 
 def main():
     parser = ArgumentParser(description="Runs script to extract SDG issues")
@@ -75,11 +80,15 @@ def main():
         if result:
             sdg_issues.append(result)
     print(json.dumps(sdg_issues, indent=2))
-    print("only this round")
-    print(json.dumps([sdg for sdg in sdg_issues if sdg['round_number'] == arguments.round and
+
+    sdg_issues_year = [sdg for sdg in sdg_issues if sdg['round_number'] == arguments.round and
                       sdg['year'] == date.today().year and
-                      not sdg['awarded']],
-                      indent=2))
+                      not sdg['awarded']] 
+    #Filter only this year and combine to calculate all they've been funded ask
+    sdg_prev_round = [sdg_p for sdg_p in sdg_issues if sdg_p['round_number'] != arguments.round and sdg['year'] == date.today().year]
+    print("only this round")
+    sdg_overall = combine_projects_rounds(sdg_issues_year, sdg_prev_round)
+    print(json.dumps(sdg_issues_year, indent=2))
 
 if __name__ == "__main__":
     main()
