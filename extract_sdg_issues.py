@@ -72,7 +72,7 @@ def combine_projects_rounds(issues_round, issues_prev):
                 sdg['funded_amount'] += sdg_prev['funded_amount']
 
 
-def update_board(issues_round=None, round=2):
+def update_board(issues_round, round):
     GH_TOKEN = os.getenv("GH_TOKEN")
 
 ## Finding the project board id    
@@ -267,9 +267,9 @@ def main():
     #Filter only this year and combine to calculate all they've been funded ask
     sdg_prev_round = [sdg_p for sdg_p in sdg_issues if sdg_p['round_number'] != arguments.round and sdg_p['year'] == date.today().year]
     print("only this round")
-    sdg_overall = combine_projects_rounds(sdg_issues_year, sdg_prev_round)
+    combine_projects_rounds(sdg_issues_year, sdg_prev_round)
     print(json.dumps(sdg_issues_year, indent=2))
-    update_board(sdg_overall, round=arguments.round)
+    update_board(sdg_issues_year, arguments.round)
 
 if __name__ == "__main__":
     main()
