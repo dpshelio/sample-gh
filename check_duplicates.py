@@ -17,7 +17,7 @@ def find_duplicates(issues):
                 # add a label to the issues
                 for issue in issues:
                     if issue['project_name'] == 'uproj':
-                        command = f'gh issue edit {issue['issue_number']} --add-label "duplicate"'
+                        command = f'gh issue edit {issue["issue_number"]} --add-label "duplicate"'
                         output = subprocess.run(shlex.split(command), capture_output=True)
                         if output.returncode == 0:
                             project_id = json.loads(output.stdout)['data']['organization']['projectV2']['id']
