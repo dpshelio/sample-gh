@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: pip install requests pyyaml
 
-      - name: Run SDG issue extractor
+      - name: Run SDG duplicates checker
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
