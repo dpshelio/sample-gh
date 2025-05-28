@@ -45,7 +45,7 @@ def parse_issue(issue):
     body = issue["body"]
     project_match = re.search(r"(?i)Project\s*[\n\r]+(.+?)(?=\n\S|$)", body, re.DOTALL)
     project_name = project_match.group(1).strip() if project_match else ""
-    if url := re.search(r"\[.*\]\(.*\)", project_match):
+    if url := re.search(r"\[(.*)\]\(.*\)", project_name):
         project_name = url.group(1)
 
     amount_match = re.search(r"(?i)Amount requested\s*[\n\r]+(.+?)(?=\n\S|$)", body, re.DOTALL)
