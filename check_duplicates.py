@@ -39,7 +39,7 @@ def main():
             sdg_issues.append(result)
     sdg_issues_round = [sdg for sdg in sdg_issues if sdg['round_number'] == arguments.round and
                       sdg['year'] == date.today().year]
-
+    print(json.dumps(sdg_issues_round, indent=2))
     find_duplicates(sdg_issues_round)
 
 if __name__ == "__main__":
