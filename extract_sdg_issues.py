@@ -217,6 +217,8 @@ gh api graphql -f query='
 
     for issue in issues_round:
         issue_id = next(filter(lambda x: x['number'] == issue['number'], ids))['id']
+
+        ## Amount requested
         output = subprocess.run(shlex.split(command.format(project_id=project_id,
                                                            issue_n=issue_id,
                                                            amount="PVTF_lAHOAA6yqs4A2g3RzgrzuYg",
@@ -225,6 +227,25 @@ gh api graphql -f query='
         if output.returncode != 0:
             raise ValueError(output.stderr)
         
+
+        ## Previously amount funded
+        output = subprocess.run(shlex.split(command.format(project_id=project_id,
+                                                           issue_n=issue_id,
+                                                           amount="PVTF_lAHOAA6yqs4A2g3Rzgu0-AQ", # dps
+                                                           value=issue['funded_amount']
+                                                           )), capture_output=True)
+        if output.returncode != 0:
+            raise ValueError(output.stderr)
+
+        ## SDG reviewers
+        output = subprocess.run(shlex.split(command.format(project_id=project_id,
+                                                           issue_n=issue_id,
+                                                           amount="PVTF_lAHOAA6yqs4A2g3RzgrzuQ4",
+                                                           value="dpshelio"
+                                                           )), capture_output=True)
+        if output.returncode != 0:
+            raise ValueError(output.stderr)
+
 
 
 def main():
@@ -248,7 +269,7 @@ def main():
     print("only this round")
     sdg_overall = combine_projects_rounds(sdg_issues_year, sdg_prev_round)
     print(json.dumps(sdg_issues_year, indent=2))
-    update_board(sdg_overall)
+    update_board(sdg_overall, round=arguments.round)
 
 if __name__ == "__main__":
     main()
