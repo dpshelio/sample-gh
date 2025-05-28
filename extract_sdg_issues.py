@@ -61,7 +61,7 @@ def parse_issue(issue):
         "round_number": int(round_number),
         "funded_amount": funded_amount,
         "amount_requested": amount_requested,
-        "issue": issue["number"],
+        "issue_number": issue["number"],
         "project_name": project_name
     }
 
@@ -216,7 +216,7 @@ gh api graphql -f query='
 """          
 
     for issue in issues_round:
-        issue_id = next(filter(lambda x: x['number'] == issue['number'], ids))['id']
+        issue_id = next(filter(lambda x: x['number'] == issue['issue_number'], ids))['id']
 
         ## Amount requested
         output = subprocess.run(shlex.split(command.format(project_id=project_id,
