@@ -18,7 +18,7 @@ def find_duplicates(issues):
             if projects.count(uproj) > 1:
                 # add a label to the issues
                 for issue in issues:
-                    if issue['project_name'] == 'uproj':
+                    if issue['project_name'] == uproj:
                         command = f'gh issue edit {issue["issue_number"]} --add-label "duplicate"'
                         output = subprocess.run(shlex.split(command), capture_output=True)
                         if output.returncode == 0:
