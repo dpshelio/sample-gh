@@ -13,7 +13,7 @@ on:
         - 3
 
 jobs:
-  extract-sdg:
+  duplicate-sdg:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
