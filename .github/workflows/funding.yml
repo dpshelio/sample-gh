@@ -1,4 +1,4 @@
-name: Check duplicates
+name: Allocate funds
 
 on:
   workflow_dispatch:
