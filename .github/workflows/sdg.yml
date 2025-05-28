@@ -1,9 +1,6 @@
 name: Extract SDG Issues
 
 on:
-  push:
-    branches:
-      - script_1
   workflow_dispatch:
 
 jobs:

@@ -13,7 +13,7 @@ HEADERS = {
     "X-GitHub-Api-Version": "2022-11-28"
 }
 
-LABEL_PATTERN = re.compile(r"SDG-(\d{4})-(\d+)")
+LABEL_PATTERN = re.compile(r"(\d{4})-R(\d+)")
 
 def get_all_issues():
     issues = []
