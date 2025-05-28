@@ -256,7 +256,7 @@ gh api graphql -f query='
                                                            issue_n=issue_id,
                                                            type='text',
                                                            amount="PVTF_lAHOAA6yqs4A2g3RzgrzuQ4",
-                                                           value="\"dpshelio\""
+                                                           value=f"\"{','.join(issue['reviewers'])}\""
                                                            )), capture_output=True)
         if output.returncode != 0:
             raise ValueError(output.stderr)
