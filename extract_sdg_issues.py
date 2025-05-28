@@ -7,6 +7,8 @@ from datetime import date
 import shlex
 import subprocess
 
+from distribute_proposals import distribute_proposals
+
 GITHUB_REPO = os.getenv("GITHUB_REPOSITORY")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
@@ -62,8 +64,18 @@ def parse_issue(issue):
         "funded_amount": funded_amount,
         "amount_requested": amount_requested,
         "issue_number": issue["number"],
-        "project_name": project_name
+        "project_name": project_name,
+        "reviewers": []
     }
+
+def assign_reviewers(issues, round, reviewers):
+
+    seed = int(f"{date.today().year}{round}")
+    assignments = distribute_proposals([issue['project_name'] for issue in issues], seed, reviewers)
+    for issue in issues:
+        for person, projects in assignments.items():
+            if issue['project_name'] in projects:
+                issue['reviewers'].append(person)
 
 def combine_projects_rounds(issues_round, issues_prev):
     for sdg in issues_round:
@@ -254,6 +266,7 @@ gh api graphql -f query='
 def main():
     parser = ArgumentParser(description="Runs script to extract SDG issues")
     parser.add_argument('round', type=int, help='round number to be extracted')
+    parser.add_argument('--reviewers', type=int, default=3, help='round number to be extracted')
     arguments = parser.parse_args()
 
     issues = get_all_issues()
@@ -271,6 +284,7 @@ def main():
     sdg_prev_round = [sdg_p for sdg_p in sdg_issues if sdg_p['round_number'] != arguments.round and sdg_p['year'] == date.today().year]
     print("only this round")
     combine_projects_rounds(sdg_issues_year, sdg_prev_round)
+    assign_reviewers(sdg_issues_year, arguments.round, arguments.reviewers)
     print(json.dumps(sdg_issues_year, indent=2))
     update_board(sdg_issues_year, arguments.round)
 
