@@ -85,7 +85,7 @@ def main():
                       sdg['year'] == date.today().year and
                       not sdg['awarded']] 
     #Filter only this year and combine to calculate all they've been funded ask
-    sdg_prev_round = [sdg_p for sdg_p in sdg_issues if sdg_p['round_number'] != arguments.round and sdg['year'] == date.today().year]
+    sdg_prev_round = [sdg_p for sdg_p in sdg_issues if sdg_p['round_number'] != arguments.round and sdg_p['year'] == date.today().year]
     print("only this round")
     sdg_overall = combine_projects_rounds(sdg_issues_year, sdg_prev_round)
     print(json.dumps(sdg_issues_year, indent=2))
