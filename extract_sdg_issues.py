@@ -21,7 +21,7 @@ def get_all_issues():
     issues = []
     page = 1
     while True:
-        response = requests.get(API_URL, headers=HEADERS, params={"state": "all", "per_page": 100, "page": page})
+        response = requests.get(API_URL, headers=HEADERS, params={"state": "open", "per_page": 100, "page": page})
         if response.status_code != 200:
             raise Exception(f"Failed to fetch issues: {response.status_code} - {response.text}")
         page_issues = response.json()
@@ -45,18 +45,20 @@ def parse_issue(issue):
     project_name = project_match.group(1).strip() if project_match else ""
 
     amount_match = re.search(r"(?i)Amount requested\s*[\n\r]+(.+?)(?=\n\S|$)", body, re.DOTALL)
-    awarded_amount = 0
-    if "awarded" in [l.lower() for l in labels] and amount_match:
-        try:
-            awarded_amount = int(re.sub(r"[^\d]", "", amount_match.group(1)))
-        except ValueError:
-            awarded_amount = 0
+    funded_amount = 0
+    try:
+        amount_requested = int(re.sub(r"[^\d]", "", amount_match.group(1)))
+    except ValueError:
+        amount_requested = 0
+    if "funded" in [l.lower() for l in labels] and amount_match:
+        funded_amount = amount_requested
 
     return {
-        "accepted": "accepted" in [l.lower() for l in labels],
+        "awarded": "award" in [l.lower() for l in labels],
         "year": int(year),
         "round_number": int(round_number),
-        "awarded_amount": awarded_amount,
+        "funded_amount": funded_amount,
+        "amount_requested": amount_requested,
         "project_name": project_name
     }
 
@@ -74,8 +76,10 @@ def main():
             sdg_issues.append(result)
     print(json.dumps(sdg_issues, indent=2))
     print("only this round")
-    print(json.dumps([sdg for sdg in sdg_issues if sdg['round_number'] == arguments.round and sdg['year'] == date.today().year], indent=2))
-
+    print(json.dumps([sdg for sdg in sdg_issues if sdg['round_number'] == arguments.round and
+                      sdg['year'] == date.today().year and
+                      not sdg['awarded']
+                      sdg[]], indent=2))
 
 if __name__ == "__main__":
     main()
