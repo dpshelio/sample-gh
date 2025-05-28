@@ -78,8 +78,8 @@ def main():
     print("only this round")
     print(json.dumps([sdg for sdg in sdg_issues if sdg['round_number'] == arguments.round and
                       sdg['year'] == date.today().year and
-                      not sdg['awarded']
-                      sdg[]], indent=2))
+                      not sdg['awarded']],
+                      indent=2))
 
 if __name__ == "__main__":
     main()
