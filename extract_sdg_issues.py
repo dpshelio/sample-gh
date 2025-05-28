@@ -204,7 +204,7 @@ gh api graphql -f query='
         itemId: "{issue_n}"
         fieldId: "{amount}"
         value: {{
-    number: {value}
+    {type}: {value}
         }}
       }}
     ) {{
@@ -221,6 +221,7 @@ gh api graphql -f query='
         ## Amount requested
         output = subprocess.run(shlex.split(command.format(project_id=project_id,
                                                            issue_n=issue_id,
+                                                           type='number',
                                                            amount="PVTF_lAHOAA6yqs4A2g3RzgrzuYg",
                                                            value=issue['amount_requested']
                                                            )), capture_output=True)
@@ -231,6 +232,7 @@ gh api graphql -f query='
         ## Previously amount funded
         output = subprocess.run(shlex.split(command.format(project_id=project_id,
                                                            issue_n=issue_id,
+                                                           type='number',
                                                            amount="PVTF_lAHOAA6yqs4A2g3Rzgu0-AQ", # dps
                                                            value=issue['funded_amount']
                                                            )), capture_output=True)
@@ -240,6 +242,7 @@ gh api graphql -f query='
         ## SDG reviewers
         output = subprocess.run(shlex.split(command.format(project_id=project_id,
                                                            issue_n=issue_id,
+                                                           type='text',
                                                            amount="PVTF_lAHOAA6yqs4A2g3RzgrzuQ4",
                                                            value="dpshelio"
                                                            )), capture_output=True)
