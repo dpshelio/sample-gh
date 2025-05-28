@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 import os
 import shlex
 import subprocess
+from datetime import date
 
 from sdg_utils import get_all_issues, parse_issue
 
