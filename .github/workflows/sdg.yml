@@ -2,6 +2,15 @@ name: Extract SDG Issues
 
 on:
   workflow_dispatch:
+    inputs:
+      round:
+        description: 'which round'
+        required: true
+        type: choice
+        options:
+        - 1
+        - 2
+        - 3
 
 jobs:
   extract-sdg:
@@ -22,4 +31,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: python extract_sdg_issues.py
+        run: python extract_sdg_issues.py ${{ github.event.round }}

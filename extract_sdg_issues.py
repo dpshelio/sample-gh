@@ -1,7 +1,9 @@
+from argparse import ArgumentParser
 import os
 import re
 import json
 import requests
+from datetime import date
 
 GITHUB_REPO = os.getenv("GITHUB_REPOSITORY")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
@@ -60,6 +62,10 @@ def parse_issue(issue):
 
 
 def main():
+    parser = ArgumentParser(description="Runs script to extract SDG issues")
+    parser.add_argument('round', type=int, help='round number to be extracted')
+    arguments = parser.parse_args()
+
     issues = get_all_issues()
     sdg_issues = []
     for issue in issues:
@@ -67,6 +73,8 @@ def main():
         if result:
             sdg_issues.append(result)
     print(json.dumps(sdg_issues, indent=2))
+    print("only this round")
+    print(json.dumps([sdg for sdg in sdg_issues if sdg['round_number'] == arguments.round and sdg['year'] == date.today().year], indent=2))
 
 
 if __name__ == "__main__":
