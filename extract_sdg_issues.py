@@ -4,6 +4,8 @@ import re
 import json
 import requests
 from datetime import date
+import shlex
+import subprocess
 
 GITHUB_REPO = os.getenv("GITHUB_REPOSITORY")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
@@ -59,6 +61,7 @@ def parse_issue(issue):
         "round_number": int(round_number),
         "funded_amount": funded_amount,
         "amount_requested": amount_requested,
+        "issue": issue["number"],
         "project_name": project_name
     }
 
@@ -67,6 +70,162 @@ def combine_projects_rounds(issues_round, issues_prev):
         for sdg_prev in issues_prev:
             if sdg['project_name'] == sdg_prev['project_name']:
                 sdg['funded_amount'] += sdg_prev['funded_amount']
+
+
+def update_board(issues_round=None, round=2):
+    GH_TOKEN = os.getenv("GH_TOKEN")
+
+## Finding the project board id    
+    command = """
+gh api graphql -f query='
+  query($user: String! $number: Int!){
+    user(login: $user){
+      projectV2(number: $number) {
+        id
+      }
+    }
+  }' -f user=dpshelio -F number=3
+    """
+    output = subprocess.run(shlex.split(command), capture_output=True)
+    if output.returncode == 0:
+        project_id = json.loads(output.stdout)['data']['user']['projectV2']['id']
+    else:
+        raise ValueError(output.stderr)
+
+## Finding the ids for each field
+    command = """
+gh api graphql -f query='
+  query{{
+  node(id: "{project_id}") {{
+    ... on ProjectV2 {{
+      fields(first: 20) {{
+        nodes {{
+          ... on ProjectV2Field {{
+            id
+            name
+          }}
+          ... on ProjectV2IterationField {{
+            id
+            name
+            configuration {{
+              iterations {{
+                startDate
+                id
+              }}
+            }}
+          }}
+          ... on ProjectV2SingleSelectField {{
+            id
+            name
+            options {{
+              id
+              name
+            }}
+          }}
+        }}
+      }}
+    }}
+  }}
+}}'
+    """
+    # output = subprocess.run(shlex.split(command.format(project_id=project_id)), capture_output=True)
+    # if output.returncode == 0:
+    #     print(json.dumps(json.loads(output.stdout), indent=2))
+    # else:
+    #     raise ValueError(output.stderr)
+
+### Querying the issue independently to the repo produces a different id.
+#     command = """
+# gh api graphql -f query='query FindIssueID {{
+#   repository(owner:"dpshelio", name:"sample-gh") {{
+#     issue(number:3) {{
+#       id
+#     }}
+#   }}
+# }}'
+# """    
+#     output = subprocess.run(shlex.split(command.format(project_id=project_id)), capture_output=True)
+#     if output.returncode == 0:
+#         print(json.dumps(json.loads(output.stdout), indent=2))
+#     else:
+#         raise ValueError(output.stderr)
+
+
+
+
+    ### Finding the issues IDs
+    command = """
+gh api graphql -f query='
+  query{{
+    node(id: "{project_id}") {{
+        ... on ProjectV2 {{
+          items(first: 50) {{
+            nodes{{
+              id
+              content{{
+                ...on Issue {{
+                  title
+                  number
+                  labels(first: 10) {{
+                   nodes {{
+                      name
+                    }}
+                  }}
+                }}
+              }}
+            }}
+          }}
+        }}
+      }}
+    }}'
+"""
+    output = subprocess.run(shlex.split(command.format(project_id=project_id,
+                                                       )), capture_output=True)
+    if output.returncode == 0:
+        ids = json.loads(output.stdout)['data']['node']['items']['nodes']
+        # simplify the structure received from graphql
+        for card in ids:
+            labels = [x['name'] for x in card['content']['labels']['nodes']]
+            card['content']['labels'] = labels
+            card |= card['content']
+            del card['content']
+        print(json.dumps(ids, indent=2))
+    else:
+        raise ValueError(output.stderr)
+    
+
+### Updating an issue    
+    command = """
+gh api graphql -f query='
+  mutation {{
+    updateProjectV2ItemFieldValue(
+      input: {{
+        projectId: "{project_id}"
+        itemId: "{issue_n}"
+        fieldId: "{amount}"
+        value: {{
+    number: {value}
+        }}
+      }}
+    ) {{
+      projectV2Item {{
+        id
+      }}
+    }}
+  }}'
+"""          
+
+    for issue in issues_round:
+        issue_id = next(filter(lambda x: x['number'] == issue['number'], ids))['id']
+        output = subprocess.run(shlex.split(command.format(project_id=project_id,
+                                                           issue_n=issue_id,
+                                                           amount="PVTF_lAHOAA6yqs4A2g3RzgrzuYg",
+                                                           value=issue['amount_requested']
+                                                           )), capture_output=True)
+        if output.returncode != 0:
+            raise ValueError(output.stderr)
+        
+
 
 def main():
     parser = ArgumentParser(description="Runs script to extract SDG issues")
@@ -89,6 +248,7 @@ def main():
     print("only this round")
     sdg_overall = combine_projects_rounds(sdg_issues_year, sdg_prev_round)
     print(json.dumps(sdg_issues_year, indent=2))
+    update_board(sdg_overall)
 
 if __name__ == "__main__":
     main()
