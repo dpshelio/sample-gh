@@ -31,4 +31,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: python extract_sdg_issues.py ${{ github.event.round }}
+        run: python extract_sdg_issues.py ${{ inputs.round }}
